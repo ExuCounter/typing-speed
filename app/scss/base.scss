@@ -1,0 +1,59 @@
+$background-color: #55c5ff;
+$white: #FFF;
+$light-blue: #8ad8ff;
+$bright-blue: #67defd;
+$dark: #212121;
+$gray: #B5BBC2;
+
+$font-md: 1em;
+$font-xl: 1.25em;
+$font-xxl: 1.5em;
+$font-x: 0.75em;
+
+$font-light: 300;
+$font-medium: 400;
+$font-bolder: 500;
+$font-bold: 600;
+
+$font-montserrat: 'Montserrat', sans-serif;
+
+html{
+  font-size: 16px;
+
+}
+
+body{
+  background-color: $background-color;
+  color: $dark;
+
+  font-size: $font-xl;
+  font-family: $font-montserrat;
+
+  display: flex;
+  align-items: center;
+
+  width: 100vw;
+  height: 100vh;
+
+}
+
+%gray-span{
+  font-weight: 500;
+  color: $gray;
+
+}
+
+.type-number{
+  color: $bright-blue;
+  font-size: $font-xxl;
+
+  font-weight: $font-bolder;
+  margin-right: 0.25em;
+
+}
+
+.blue-text{
+  color: $bright-blue;
+  font-weight: $font-bold;
+
+}

@@ -1,0 +1,22 @@
+html {
+  font-size: 16px; }
+
+body {
+  background-color: #55c5ff;
+  color: #212121;
+  font-size: 1.25em;
+  font-family: "Montserrat", sans-serif;
+  display: flex;
+  align-items: center;
+  width: 100vw;
+  height: 100vh; }
+
+.type-number {
+  color: #67defd;
+  font-size: 1.5em;
+  font-weight: 500;
+  margin-right: 0.25em; }
+
+.blue-text {
+  color: #67defd;
+  font-weight: 600; }

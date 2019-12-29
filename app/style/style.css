@@ -1,0 +1,63 @@
+html {
+  font-size: 16px; }
+
+body {
+  background-color: #55c5ff;
+  color: #212121;
+  font-size: 1.25em;
+  font-family: "Montserrat", sans-serif;
+  display: flex;
+  align-items: center;
+  width: 100vw;
+  height: 100vh; }
+
+.type-number {
+  color: #67defd;
+  font-size: 1.5em;
+  font-weight: 500;
+  margin-right: 0.25em; }
+
+.blue-text {
+  color: #67defd;
+  font-weight: 600; }
+
+.main {
+  max-width: 992px;
+  margin: 0 auto; }
+  .main-type {
+    display: flex;
+    align-self: center;
+    justify-self: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; }
+    .main-type-field {
+      width: 100%;
+      padding: 1em;
+      background-color: #8ad8ff;
+      border-bottom-left-radius: 0.5em;
+      border-bottom-right-radius: 0.5em; }
+      .main-type-field input {
+        width: 100%;
+        height: 7.5em; }
+    .main-type-text {
+      width: 100%;
+      background-color: #FFF;
+      padding: 1em;
+      border-top-left-radius: 0.5em;
+      border-top-right-radius: 0.5em;
+      line-height: 2em; }
+    .main-type .try-again-block svg {
+      fill: #FFF;
+      margin-right: 0.35em; }
+  .main .typing-stats > div {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: #B5BBC2; }
+  .main .typing-stats svg {
+    margin-right: 0.35em;
+    fill: #B5BBC2; }
+  .main .typing-stats .typing-stats-block {
+    align-items: baseline;
+    line-height: 1.75em; }
