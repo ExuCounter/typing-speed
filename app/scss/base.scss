@@ -4,6 +4,7 @@ $light-blue: #8ad8ff;
 $bright-blue: #67defd;
 $dark: #212121;
 $gray: #B5BBC2;
+$green: #5BC538;
 
 $font-md: 1em;
 $font-xl: 1.25em;
@@ -55,5 +56,23 @@ body{
 .blue-text{
   color: $bright-blue;
   font-weight: $font-bold;
+
+}
+
+.text-active{
+  background-color: $green;
+  color: #FFF;
+
+  border-radius: 3px;
+  padding: 0.1em 0.05em;
+
+}
+
+.text-default{
+  padding: 0.1em 0em 0em 0.1em;
+}
+
+.text-done{
+  color: $green;
 
 }

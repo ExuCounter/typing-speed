@@ -20,3 +20,15 @@ body {
 .blue-text {
   color: #67defd;
   font-weight: 600; }
+
+.text-active {
+  background-color: #5BC538;
+  color: #FFF;
+  border-radius: 3px;
+  padding: 0.1em 0.05em; }
+
+.text-default {
+  padding: 0.1em 0em 0em 0.1em; }
+
+.text-done {
+  color: #5BC538; }
