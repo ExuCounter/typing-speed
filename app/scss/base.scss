@@ -9,7 +9,7 @@ $green: #5BC538;
 $font-md: 1em;
 $font-xl: 1.25em;
 $font-xxl: 1.5em;
-$font-x: 0.75em;
+$font-sm: 0.75em;
 
 $font-light: 300;
 $font-medium: 400;
@@ -49,13 +49,15 @@ body{
   font-size: $font-xxl;
 
   font-weight: $font-bolder;
-  margin-right: 0.25em;
+  margin-right: 0.1em;
 
 }
 
 .blue-text{
   color: $bright-blue;
   font-weight: $font-bold;
+
+  font-size: 0.85em;
 
 }
 
@@ -69,7 +71,7 @@ body{
 }
 
 .text-default{
-  padding: 0.1em 0em 0em 0.1em;
+  padding: 0.1em 0.1em 0em 0.1em;
 }
 
 .text-done{

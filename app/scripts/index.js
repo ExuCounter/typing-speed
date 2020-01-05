@@ -1,89 +1,121 @@
+import {
+    ukrTextArray,
+    rusTextArray,
+    engTextArray
+} from "./dataArrays.js";
+
 const mainText = document.getElementById('main-text');
 const mainTextarea = document.getElementById('main-textarea');
 const speedNumber = document.getElementById('speed-number');
+const buttonStart = document.querySelector('.button');
 
-mainText.ondragstart = noselect;
-// запрет на перетаскивание
-mainText.onselectstart = noselect;
-// запрет на выделение элементов страницы
-mainText.oncontextmenu = noselect;
-
-function noselect() {
-    return false;
-}
-
-let textArray = [
-    'Але, щоб ви зрозуміли, звідки виникає це хибне уявлення людей, цуратись насолоди і вихваляти страждання, я розкрию перед вами всю картину і роз’ясню, що саме говорив цей чоловік, який відкрив істину, якого я б назвав зодчим щасливого життя',
-    'Але, ми цураємось і вважаємо, що заслуговують справедливого обурення ті, хто, піддався звабі і розбещеним спокусам, які дають їм насолоду, і без тями від пристрасті не передбачили, яких страждань і які нещастя на них чекають. Вони винні так само, як і ті, хто через душевну слабкість, тобто через бажання уникнути страждань і болю відмовляється від виконання свого обов’язку.',
-    'Втім, тут дуже легко і просто провести відмінності, тому що, коли ми вільні і нам надана повна можливість вибору бажаного, коли ніщо не заважає нам робити те, що нам більше подобається, будь яку насолоду слід визнати бажаним, а будь-яке страждання огидним. Але при деяких обставинах – або на вимогу боргу, або в силу якоїсь необхідності часто доводиться забувати про насолоди і не втікати від тягарів. Тому мудрець дотримується в цьому випадку наступного принципу вибору – або, відмовляючись від задоволення, він отримує якісь інші і навіть'
-];
+let text = null;
 
 function insertAdjacent(element, where, html) {
     return element.insertAdjacentHTML(where, html);
 
 }
 
-function calcSpeed(){
-    let speedCounter = 0;
-    let time = 1;
-    setInterval(()=>(time++), 1000);
-    mainTextarea.addEventListener('keydown', ()=>{
-        speedCounter++;
-    });
-    setInterval(()=>{speedNumber.innerHTML = `${Math.ceil((speedCounter*60)/time)}`}, 1000);
+export class Text {
+    timeIncrement;
+    numberIncrement;
 
-}
+    calcSpeed(speedCounter, time){
+        this.timeIncrement = setInterval(()=>(time++), 1000);
+        this.numberIncrement = setInterval(()=>{speedNumber.innerHTML = `${Math.ceil((speedCounter*60)/time)}`}, 1500);
+        mainTextarea.addEventListener('keydown', ()=>{
+            if(event.code === "Backspace" || event.key === 'Shift' || event.code === "Enter" || event.key === 'Alt' ||
+                event.key === 'Meta' || event.key === 'Control' || event.key === 'Tab' || event.key === 'CapsLock' ||
+                event.code === 'ArrowDown' || event.code === 'ArrowUp' || event.code === 'ArrowLeft' || event.code === 'ArrowRight' ||
+                event.code === 'Delete' || event.code === 'End' || event.code === "Help" || event.code === 'Home' ||
+                event.code === 'Insert')  return false;
+            speedCounter++;
+        });
 
-// 600/1min
-//
-// 200/20sec  200*6/2
-//
-// 100/10sec  100*60/10
-//
-// 10/1sec    10*60/1
-//
-// 1 min
+    }
 
-calcSpeed();
+    mainTextAreaHandler(){
+        mainTextarea.addEventListener('input', ()=>{
+            let activeText = document.getElementsByClassName('text-active');
+            for(let text of activeText){
+                let mainTextareaArray = mainTextarea.value.split('');
+                let lastWord = mainTextareaArray[mainTextareaArray.length-1];
+                if(text.innerHTML.endsWith(lastWord)){
+                    let sibling = text.nextSibling;
+                    text.classList.add('text-done');
+                    text.classList.remove('text-active');
+                    sibling.classList.add('text-active');
 
-    mainTextarea.addEventListener('input', ()=>{
-        let activeText = document.getElementsByClassName('text-active');
-        for(let text of activeText){
-            let mainTextareaArray = mainTextarea.value.split('');
-            let lastWord = mainTextareaArray[mainTextareaArray.length-1];
-            if(text.innerHTML.endsWith(lastWord)){
-                let sibling = text.nextSibling;
-                text.classList.add('text-done');
-                text.classList.remove('text-active');
-                sibling.classList.add('text-active');
+                }
 
             }
 
-        }
+        });
+    }
 
-    });
+    createText(speedCounter, time) {
+        this.calcSpeed(speedCounter,time);
+        this.mainTextAreaHandler();
+        outputText(engTextArray);
 
+    }
 
-
-function outputText(textArray){
-    let textNumber = Math.floor(Math.random() * (textArray.length));
-
-    let text = textArray[1].split(' ');
-
-    for(let span of text){
-        if(span === text[0]){
-            insertAdjacent(mainText, 'beforeend', `<span class='text-active'>${span}</span>`);
-            insertAdjacent(mainText, 'beforeend', `<span class='text-default'> </span>`)
-
-        }
-        else{
-            insertAdjacent(mainText, 'beforeend', `<span class='text-default'>${span}</span>`);
-            insertAdjacent(mainText, 'beforeend', `<span class='text-default'> </span>`);
-
-        }
+    clearTextInterval(){
+        setInterval(()=>{clearInterval(this.timeIncrement)},0);
+        setInterval(()=>{clearInterval(this.numberIncrement)},0);
 
     }
 
 }
 
-outputText(textArray);;
+function newTextStart() {
+    mainTextarea.value = '';
+    mainTextarea.focus();
+
+    if(text){
+        text.clearTextInterval();
+        newText();
+    }
+    else{
+        newText();
+
+    }
+}
+
+function newText() {
+    text = new Text();
+    text.createText(0,0);
+
+}
+
+buttonStart.addEventListener('click', ()=>{
+    newTextStart();
+});
+
+function outputText(textArray){
+    let textNumber = Math.floor(Math.random() * (textArray.length));
+    mainText.innerHTML = '';
+
+    let text = textArray[textNumber].split(' ');
+
+    for(let i = 0; i < text.length; i++){
+        if(i===0){
+            insertAdjacent(mainText, 'beforeend', `<span class='text-active'>${text[0]}</span>`);
+            insertAdjacent(mainText, 'beforeend', `<span class='text-default'> </span>`);
+        }
+        else{
+            insertAdjacent(mainText, 'beforeend', `<span class='text-default'>${text[i]}</span>`);
+            insertAdjacent(mainText, 'beforeend', `<span class='text-default'> </span>`);
+
+        }
+    }
+
+}
+
+outputText(engTextArray);
+
+export{
+    newTextStart,
+    outputText
+
+}

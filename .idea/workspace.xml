@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fbcdad58-b480-49b5-93e0-bbcc2972170b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/scripts/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/scripts/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/scss/base.scss" beforeDir="false" afterPath="$PROJECT_DIR$/app/scss/base.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/scss/main.scss" beforeDir="false" afterPath="$PROJECT_DIR$/app/scss/main.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/scss/style.scss" beforeDir="false" afterPath="$PROJECT_DIR$/app/scss/style.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/style/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/style/base.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/style/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/style/style.css" afterDir="false" />
     </list>
@@ -68,7 +68,13 @@
       <workItem from="1572599411686" duration="4531000" />
       <workItem from="1572624129803" duration="1003000" />
       <workItem from="1577253095846" duration="1602000" />
-      <workItem from="1577608314840" duration="20467000" />
+      <workItem from="1577608314840" duration="20513000" />
+      <workItem from="1577693134817" duration="6958000" />
+      <workItem from="1577730195355" duration="3881000" />
+      <workItem from="1577983716739" duration="2629000" />
+      <workItem from="1577992018085" duration="1437000" />
+      <workItem from="1577997622444" duration="108000" />
+      <workItem from="1578170443727" duration="9876000" />
     </task>
     <servers />
   </component>
@@ -80,7 +86,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

@@ -15,11 +15,12 @@ body {
   color: #67defd;
   font-size: 1.5em;
   font-weight: 500;
-  margin-right: 0.25em; }
+  margin-right: 0.1em; }
 
 .blue-text {
   color: #67defd;
-  font-weight: 600; }
+  font-weight: 600;
+  font-size: 0.85em; }
 
 .text-active {
   background-color: #5BC538;
@@ -28,7 +29,7 @@ body {
   padding: 0.1em 0.05em; }
 
 .text-default {
-  padding: 0.1em 0em 0em 0.1em; }
+  padding: 0.1em 0.1em 0em 0.1em; }
 
 .text-done {
   color: #5BC538; }
@@ -42,7 +43,8 @@ body {
     justify-self: center;
     justify-content: center;
     align-items: center;
-    flex-direction: column; }
+    flex-direction: column;
+    box-shadow: 0px 0px 40px 2px #2aafcd; }
     .main-type-field {
       width: 100%;
       padding: 1em;
@@ -64,7 +66,8 @@ body {
       line-height: 2em;
       cursor: default; }
     .main-type .try-again-block {
-      cursor: pointer; }
+      cursor: pointer;
+      display: inline; }
       .main-type .try-again-block svg {
         fill: #FFF;
         margin-right: 0.35em; }
