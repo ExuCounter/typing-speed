@@ -7,9 +7,11 @@ import {
 const mainText = document.getElementById('main-text');
 const mainTextarea = document.getElementById('main-textarea');
 const speedNumber = document.getElementById('speed-number');
-const buttonStart = document.querySelector('.button');
+const languageSelect = document.getElementById('language-select');
+const tryAgainBtn = document.getElementById('try-again');
+const buttonStart = document.querySelector('.button-start');
 
-let text = null;
+let textOutput = null;
 
 function insertAdjacent(element, where, html) {
     return element.insertAdjacentHTML(where, html);
@@ -56,13 +58,13 @@ export class Text {
     createText(speedCounter, time) {
         this.calcSpeed(speedCounter,time);
         this.mainTextAreaHandler();
-        outputText(engTextArray);
 
     }
 
     clearTextInterval(){
         setInterval(()=>{clearInterval(this.timeIncrement)},0);
         setInterval(()=>{clearInterval(this.numberIncrement)},0);
+        speedNumber.innerHTML = '0';
 
     }
 
@@ -72,8 +74,8 @@ function newTextStart() {
     mainTextarea.value = '';
     mainTextarea.focus();
 
-    if(text){
-        text.clearTextInterval();
+    if(textOutput){
+        textOutput.clearTextInterval();
         newText();
     }
     else{
@@ -83,18 +85,34 @@ function newTextStart() {
 }
 
 function newText() {
-    text = new Text();
-    text.createText(0,0);
+    textOutput = new Text();
+    textOutput.createText(0,0);
 
 }
 
 buttonStart.addEventListener('click', ()=>{
+    let selectedLang = eval((languageSelect.value).slice(0, 3).toLowerCase() + 'TextArray');
     newTextStart();
+});
+
+tryAgainBtn.addEventListener('click', ()=>{
+    let selectedLang = eval((languageSelect.value).slice(0, 3).toLowerCase() + 'TextArray');
+    outputText(selectedLang);
+});
+
+languageSelect.addEventListener('change', ()=>{
+    let selectedLang = eval((languageSelect.value).slice(0, 3).toLowerCase() + 'TextArray');
+    outputText(selectedLang);
 });
 
 function outputText(textArray){
     let textNumber = Math.floor(Math.random() * (textArray.length));
     mainText.innerHTML = '';
+    mainTextarea.value = '';
+
+    if(textOutput){
+        textOutput.clearTextInterval();
+    }
 
     let text = textArray[textNumber].split(' ');
 
