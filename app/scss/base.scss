@@ -5,6 +5,8 @@ $bright-blue: #67defd;
 $dark: #212121;
 $gray: #B5BBC2;
 $green: #5BC538;
+$warn: #FFDAD2;
+$red: #FF2C37;
 
 $font-md: 1em;
 $font-xl: 1.25em;
@@ -67,6 +69,10 @@ body{
 
   border-radius: 3px;
   padding: 0.1em 0.05em;
+  &.text-error{
+    background-color: $red;
+
+  }
 
 }
 

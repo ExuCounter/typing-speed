@@ -1,5 +1,5 @@
 .main {
-  max-width: 992px;
+  max-width: 1110px;
   margin: 0 auto;
 
   &-type{
@@ -14,7 +14,7 @@
     box-shadow: 0px 0px 40px 2px #2aafcd;
     &-field{
       width: 100%;
-      padding: 1em;
+      padding: 1.25em;
       background-color: $light-blue;
 
       border-bottom-left-radius: 0.5em;
@@ -29,6 +29,10 @@
           visibility: hidden;
 
         }
+        &.textarea-error{
+          background-color: $warn;
+
+        }
 
       }
 
@@ -36,7 +40,7 @@
     &-text{
       width: 100%;
       background-color: $white;
-      padding: 1em;
+      padding: 1.25em;
 
       border-top-left-radius: 0.5em;
       border-top-right-radius: 0.5em;

@@ -10,6 +10,7 @@ const speedNumber = document.getElementById('speed-number');
 const languageSelect = document.getElementById('language-select');
 const tryAgainBtn = document.getElementById('try-again');
 const buttonStart = document.querySelector('.button-start');
+const accuracyNumber = document.getElementById('accuracy-number');
 
 let textOutput = null;
 
@@ -18,13 +19,17 @@ function insertAdjacent(element, where, html) {
 
 }
 
-export class Text {
-    timeIncrement;
-    numberIncrement;
+/* MAIN CLASS TEXT */
 
-    calcSpeed(speedCounter, time){
-        this.timeIncrement = setInterval(()=>(time++), 1000);
-        this.numberIncrement = setInterval(()=>{speedNumber.innerHTML = `${Math.ceil((speedCounter*60)/time)}`}, 1500);
+class Text {
+    timeSpeedIncrement;
+    numberSpeedIncrement;
+    numberAccuracyIncrement;
+
+    calcStat(speedCounter, time){
+        this.timeSpeedIncrement = setInterval(()=>(time++), 1000);
+        this.numberSpeedIncrement = setInterval(()=>{speedNumber.innerHTML = `${Math.ceil((speedCounter*60)/time)}`}, 1000);
+        this.numberAccuracyIncrement = setInterval(()=>{accuracyNumber.innerHTML = `${Math.ceil((1)/time)}`}, 1000);
         mainTextarea.addEventListener('keydown', ()=>{
             if(event.code === "Backspace" || event.key === 'Shift' || event.code === "Enter" || event.key === 'Alt' ||
                 event.key === 'Meta' || event.key === 'Control' || event.key === 'Tab' || event.key === 'CapsLock' ||
@@ -36,39 +41,97 @@ export class Text {
 
     }
 
+    calcAccuracy(){
+
+    }
+
+    /* sasha one love  || sasha sasha || space space*/
+    /* [sasha,one,love] */
+    /* sasha */
+
     mainTextAreaHandler(){
+        let lastKey = null;
+        let lastWord = null;
+
+        mainTextarea.addEventListener('keydown', ()=>{
+            lastKey = event.code;
+            if(lastWord === ' ' && lastKey === 'Backspace'){
+                alert(true);
+            }
+        });
+
         mainTextarea.addEventListener('input', ()=>{
+
             let activeText = document.getElementsByClassName('text-active');
             for(let text of activeText){
-                let mainTextareaArray = mainTextarea.value.split('');
-                let lastWord = mainTextareaArray[mainTextareaArray.length-1];
-                if(text.innerHTML.endsWith(lastWord)){
+                let mainTextareaArray = mainTextarea.value.split(' ');
+                lastWord = mainTextareaArray[mainTextareaArray.length-1];
+
+                let prevSibling = text.previousSibling;
+                let nextSibling = text.nextSibling;
+
+                mainTextarea.classList.remove('textarea-error');
+                text.classList.remove('text-error');
+
+                if(lastWord === text.innerHTML){
                     let sibling = text.nextSibling;
                     text.classList.add('text-done');
                     text.classList.remove('text-active');
                     sibling.classList.add('text-active');
+
+                    text.classList.remove('text-error');
+
+                }
+                else if(text.innerHTML === ' ' && lastKey === 'Space'){
+                    let sibling = text.nextSibling;
+                    text.classList.add('text-done');
+                    text.classList.remove('text-active');
+                    sibling.classList.add('text-active');
+
+                    text.classList.remove('text-error');
+
+                }
+                else if(!(text.innerHTML.startsWith(lastWord))){
+                    mainTextarea.classList.add('textarea-error');
+                    text.classList.add('text-error');
+
+                }
+                if(lastKey === 'Backspace' && ( prevSibling.innerHTML.indexOf(" ") || document.querySelector('.text-error'))){
+                    prevSibling.classList.remove('text-done');
+                    text.classList.remove('text-active');
+                    prevSibling.classList.add('text-active');
+
+                    text.classList.remove('text-error');
+                    mainTextarea.classList.remove('textarea-error');
 
                 }
 
             }
 
         });
+
     }
 
+    /* Если */
+
     createText(speedCounter, time) {
-        this.calcSpeed(speedCounter,time);
+        this.calcStat(speedCounter,time);
         this.mainTextAreaHandler();
 
     }
 
     clearTextInterval(){
-        setInterval(()=>{clearInterval(this.timeIncrement)},0);
-        setInterval(()=>{clearInterval(this.numberIncrement)},0);
+        setInterval(()=>{clearInterval(this.timeSpeedIncrement)},0);
+        setInterval(()=>{clearInterval(this.numberSpeedIncrement)},0);
+        setInterval(()=>{clearInterval(this.numberAccuracyIncrement)},0);
         speedNumber.innerHTML = '0';
+        accuracyNumber.innerHTML = '0';
 
     }
 
 }
+
+/* HANDLE TEXT */
 
 function newTextStart() {
     mainTextarea.value = '';
@@ -89,21 +152,6 @@ function newText() {
     textOutput.createText(0,0);
 
 }
-
-buttonStart.addEventListener('click', ()=>{
-    let selectedLang = eval((languageSelect.value).slice(0, 3).toLowerCase() + 'TextArray');
-    newTextStart();
-});
-
-tryAgainBtn.addEventListener('click', ()=>{
-    let selectedLang = eval((languageSelect.value).slice(0, 3).toLowerCase() + 'TextArray');
-    outputText(selectedLang);
-});
-
-languageSelect.addEventListener('change', ()=>{
-    let selectedLang = eval((languageSelect.value).slice(0, 3).toLowerCase() + 'TextArray');
-    outputText(selectedLang);
-});
 
 function outputText(textArray){
     let textNumber = Math.floor(Math.random() * (textArray.length));
@@ -131,9 +179,25 @@ function outputText(textArray){
 }
 
 outputText(engTextArray);
+newTextStart();
 
-export{
-    newTextStart,
-    outputText
+/* BUTTONS */
 
-}
+buttonStart.addEventListener('click', ()=>{
+    let selectedLang = eval((languageSelect.value).slice(0, 3).toLowerCase() + 'TextArray');
+    newTextStart();
+});
+tryAgainBtn.addEventListener('click', ()=>{
+    let selectedLang = eval((languageSelect.value).slice(0, 3).toLowerCase() + 'TextArray');
+    outputText(selectedLang);
+});
+languageSelect.addEventListener('change', ()=>{
+    let selectedLang = eval((languageSelect.value).slice(0, 3).toLowerCase() + 'TextArray');
+    outputText(selectedLang);
+});
+
+/*
+*  Шла маша по шосе
+*  ШЫла мЫаша по шЫосе  16 букв и 3 ошибки       10 символов == 100%    1 символ == 1%
+*
+* */

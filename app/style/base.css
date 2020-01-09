@@ -27,6 +27,8 @@ body {
   color: #FFF;
   border-radius: 3px;
   padding: 0.1em 0.05em; }
+  .text-active.text-error {
+    background-color: #FF2C37; }
 
 .text-default {
   padding: 0.1em 0.1em 0em 0.1em; }
