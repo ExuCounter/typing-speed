@@ -53,16 +53,13 @@ class Text {
         let lastKey = null;
         let lastWord = null;
 
-        mainTextarea.addEventListener('keydown', ()=>{
+        mainTextarea.addEventListener('keydown', ()=>{ /* Отслеживаем последнюю нажатую кнопку */
             lastKey = event.code;
-            if(lastWord === ' ' && lastKey === 'Backspace'){
-                alert(true);
-            }
         });
 
-        mainTextarea.addEventListener('input', ()=>{
+        mainTextarea.addEventListener('input', ()=>{ /* Мониторинг текстового поля для ввода */
 
-            let activeText = document.getElementsByClassName('text-active');
+            let activeText = document.getElementsByClassName('text-active'); /* Активный текст */
             for(let text of activeText){
                 let mainTextareaArray = mainTextarea.value.split(' ');
                 lastWord = mainTextareaArray[mainTextareaArray.length-1];
@@ -70,8 +67,16 @@ class Text {
                 let prevSibling = text.previousSibling;
                 let nextSibling = text.nextSibling;
 
+                let nodes = document.querySelectorAll('.text-done');
+                let textDone = nodes[nodes.length-1];
+
+                let lastWordWithoutErr = null;
+
+
                 mainTextarea.classList.remove('textarea-error');
                 text.classList.remove('text-error');
+
+                /* Проверка на совпадение последних слов */
 
                 if(lastWord === text.innerHTML){
                     let sibling = text.nextSibling;
@@ -82,28 +87,95 @@ class Text {
                     text.classList.remove('text-error');
 
                 }
-                else if(text.innerHTML === ' ' && lastKey === 'Space'){
-                    let sibling = text.nextSibling;
-                    text.classList.add('text-done');
-                    text.classList.remove('text-active');
-                    sibling.classList.add('text-active');
 
-                    text.classList.remove('text-error');
+                /* При нажатии на кнопку SPACE */
+
+                if(lastKey === 'Space'){
+                    if(!(document.querySelector('.text-error')) && text.innerHTML === ' '){
+                        /* Если не существует ошибки и следующий символ пробел, переключаем активный текст  */
+                        let sibling = text.nextSibling;
+                        text.classList.add('text-done');
+                        text.classList.remove('text-error');
+                        text.classList.remove('text-active');
+                        sibling.classList.add('text-active');
+
+                        text.classList.remove('text-error');
+                    }
+                    else{
+                        lastWordWithoutErr = textDone.previousSibling;
+                        text.classList.add('text-error');
+                        mainTextarea.classList.add('textarea-error');
+                        mainTextarea.classList.add('left-spaces-error');
+                    }
 
                 }
                 else if(!(text.innerHTML.startsWith(lastWord))){
+                    /* Если слово не совпадает кидаем ошибку */
                     mainTextarea.classList.add('textarea-error');
                     text.classList.add('text-error');
 
+                    lastWordWithoutErr = textDone.previousSibling;
+
                 }
-                if(lastKey === 'Backspace' && ( prevSibling.innerHTML.indexOf(" ") || document.querySelector('.text-error'))){
-                    prevSibling.classList.remove('text-done');
-                    text.classList.remove('text-active');
-                    prevSibling.classList.add('text-active');
+                if(lastKey === 'Backspace' && ( document.querySelector('.text-error') || prevSibling )){
+                    for(let textErr of document.getElementsByClassName('text-error')){
+                        if(textErr.previousSibling){
+                            let textErrPreviousSibling = textErr.previousSibling;
+                            if(textErrPreviousSibling.previousSibling){
+                                let lastDoneElement = textErrPreviousSibling.previousSibling;
+                                if(lastDoneElement){
+                                    if(lastWord === lastDoneElement.innerHTML){
+                                        prevSibling.classList.remove('text-done');
+                                        text.classList.remove('text-active');
+                                        prevSibling.classList.add('text-active');
 
-                    text.classList.remove('text-error');
-                    mainTextarea.classList.remove('textarea-error');
+                                        text.classList.remove('text-error');
+                                        mainTextarea.classList.remove('textarea-error');
+                                    }
+                                }
+                            }
+                        }
+                        else{
+                            if(lastWord === textErr.innerHTML){
+                                text.classList.remove('text-active');
 
+                                text.classList.remove('text-error');
+                                mainTextarea.classList.remove('textarea-error');
+                            }
+                        }
+                    }
+                    if(prevSibling){
+                        if(prevSibling.innerHTML.indexOf(" ")){
+                            prevSibling.classList.remove('text-done');
+                            text.classList.remove('text-active');
+                            prevSibling.classList.add('text-active');
+
+                            text.classList.remove('text-error');
+                            mainTextarea.classList.remove('textarea-error');
+                        }
+                    }
+
+                }
+
+                console.log(mainTextareaArray.length);
+                console.log( Math.ceil(nodes.length/2 + 1));
+
+                if(lastKey === 'Backspace' && mainTextarea.classList.contains('left-spaces-error')){
+                    if(!(((mainTextareaArray.length) === Math.ceil(nodes.length/2 + 1)) && text.indexOf(lastWord))){
+                        mainTextarea.classList.add('textarea-error');
+                        text.classList.add('text-error');
+                        mainTextarea.classList.add('left-spaces-error');
+
+                        console.log('backspace');
+                    }
+
+                }
+                if(document.querySelector('.text-error')){
+                    console.log(true);
+                }
+                else{
+                    console.log(false);
+                    mainTextarea.classList.remove('left-spaces-error');
                 }
 
             }
@@ -112,13 +184,15 @@ class Text {
 
     }
 
-    /* Если */
+    /* Функция создания новых стат */
 
-    createText(speedCounter, time) {
+    createStat(speedCounter, time) {
         this.calcStat(speedCounter,time);
         this.mainTextAreaHandler();
 
     }
+
+    /* Очистка скорости, точности */
 
     clearTextInterval(){
         setInterval(()=>{clearInterval(this.timeSpeedIncrement)},0);
@@ -132,6 +206,8 @@ class Text {
 }
 
 /* HANDLE TEXT */
+
+/* Функция запуска нового текста */
 
 function newTextStart() {
     mainTextarea.value = '';
@@ -147,11 +223,15 @@ function newTextStart() {
     }
 }
 
+/* Функция создания нового экземпляра */
+
 function newText() {
     textOutput = new Text();
-    textOutput.createText(0,0);
+    textOutput.createStat(0,0);
 
 }
+
+/* Функция вывода текста */
 
 function outputText(textArray){
     let textNumber = Math.floor(Math.random() * (textArray.length));
@@ -195,9 +275,3 @@ languageSelect.addEventListener('change', ()=>{
     let selectedLang = eval((languageSelect.value).slice(0, 3).toLowerCase() + 'TextArray');
     outputText(selectedLang);
 });
-
-/*
-*  Шла маша по шосе
-*  ШЫла мЫаша по шЫосе  16 букв и 3 ошибки       10 символов == 100%    1 символ == 1%
-*
-* */
