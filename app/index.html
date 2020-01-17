@@ -16,9 +16,6 @@
 <body>
 
 <main class="main">
-    <div class="button button-start btn btn-primary">
-        START
-    </div>
     <div class="main-type">
         <div class="main-type-text row">
             <div class="col-10" id="main-text">
@@ -93,15 +90,35 @@
                <div class="try-again-block" id="try-again">
                    <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="43px" height="43px"><path d="M20,12c0,4.411-3.589,8-8,8s-8-3.589-8-8c0-2.52,1.174-4.768,3-6.235V3.353C4.016,5.085,2,8.309,2,12c0,5.514,4.486,10,10,10s10-4.486,10-10S17.514,2,12,2v2C16.411,4,20,7.589,20,12z"/><path d="M2 2L9 2 9 9z"/></svg>
                </div>
-                <select class="form-control mt-3" id="language-select">
+                <select class="form-control mt-3 language-select-window">
+                    <option value="rus" selected>Russian</option>
                     <option value="ukr">Ukrainian</option>
-                    <option value="rus">Russian</option>
                     <option value="eng">English</option>
                 </select>
             </div>
         </div>
     </div>
 </main>
+
+<div class="modal modal-start d-flex">
+    <div class="modal-content">
+        <div class="form-group">
+            <select class="form-control language-select-modal">
+                <option value="rus" selected>Русская Раскладка</option>
+                <option value="eng">English Layout</option>
+                <option value="ukr">Українська розкладка</option>
+            </select>
+        </div>
+        <img src="./img/start.svg" alt="start icon" class="mt-3">
+        <p class="text-center pt-4 pb-1">
+            Приготовься печатать текст.<br>
+            На старт, внимание, марш!
+        </p>
+        <button class="start-btn">
+            Начать печатать
+        </button>
+    </div>
+</div>
 
 <script src="scripts/modal.js"></script>
 <script src="scripts/no-select.js"></script>

@@ -7,10 +7,15 @@ import {
 const mainText = document.getElementById('main-text');
 const mainTextarea = document.getElementById('main-textarea');
 const speedNumber = document.getElementById('speed-number');
-const languageSelect = document.getElementById('language-select');
+const languageSelectWindow = document.querySelector('.language-select-window');
+const languageSelectModal = document.querySelector('.language-select-modal');
 const tryAgainBtn = document.getElementById('try-again');
-const buttonStart = document.querySelector('.button-start');
+const buttonStart = document.querySelector('.start-btn');
 const accuracyNumber = document.getElementById('accuracy-number');
+const modalSelectOptions = document.querySelectorAll('.language-select-modal option');
+const windowSelectOptions = document.querySelectorAll('.language-select-window option');
+const modalStart = document.querySelector('.modal-start');
+const modalLangError = document.querySelector('.modal-lang-error');
 
 let textOutput = null;
 
@@ -36,6 +41,7 @@ class Text {
                 event.code === 'ArrowDown' || event.code === 'ArrowUp' || event.code === 'ArrowLeft' || event.code === 'ArrowRight' ||
                 event.code === 'Delete' || event.code === 'End' || event.code === "Help" || event.code === 'Home' ||
                 event.code === 'Insert')  return false;
+            if(document.querySelector('.text-error')) return false;
             speedCounter++;
         });
 
@@ -89,9 +95,8 @@ class Text {
                 }
 
                 /* При нажатии на кнопку SPACE */
-
-                if(lastKey === 'Space'){
-                    if(!(document.querySelector('.text-error')) && text.innerHTML === ' '){
+                if(lastKey === 'Space' && text.innerHTML === ' '){
+                    if(text.innerHTML.endsWith(lastWord) && !(document.querySelector('text-error'))){
                         /* Если не существует ошибки и следующий символ пробел, переключаем активный текст  */
                         let sibling = text.nextSibling;
                         text.classList.add('text-done');
@@ -258,20 +263,62 @@ function outputText(textArray){
 
 }
 
-outputText(engTextArray);
-newTextStart();
+function dependenceSelect(select, comparable){
+    for(let option of select){
+        if(option.value === comparable.value){
+            option.selected = true;
+        }
+    }
+
+}
+
+function openModal() {
+    modalStart.classList.add('d-flex');
+    mainTextarea.classList.remove('textarea-error');
+
+}
+
+function closeModal() {
+    modalStart.classList.remove('d-flex');
+
+}
+
+outputText(rusTextArray);
 
 /* BUTTONS */
 
+
+
+languageSelectModal.addEventListener('change', ()=>{
+    let selectedLang = eval((languageSelectModal.value).slice(0, 3).toLowerCase() + 'TextArray');
+    dependenceSelect(windowSelectOptions, languageSelectModal);
+    outputText(selectedLang);
+});
+
 buttonStart.addEventListener('click', ()=>{
-    let selectedLang = eval((languageSelect.value).slice(0, 3).toLowerCase() + 'TextArray');
+    closeModal();
     newTextStart();
 });
+
 tryAgainBtn.addEventListener('click', ()=>{
-    let selectedLang = eval((languageSelect.value).slice(0, 3).toLowerCase() + 'TextArray');
+    let selectedLang = eval((languageSelectWindow.value).slice(0, 3).toLowerCase() + 'TextArray');
+    dependenceSelect(modalSelectOptions, languageSelectWindow);
+    openModal();
     outputText(selectedLang);
 });
-languageSelect.addEventListener('change', ()=>{
-    let selectedLang = eval((languageSelect.value).slice(0, 3).toLowerCase() + 'TextArray');
+
+languageSelectWindow.addEventListener('change', ()=>{
+    let selectedLang = eval((languageSelectWindow.value).slice(0, 3).toLowerCase() + 'TextArray');
+    dependenceSelect(modalSelectOptions, languageSelectWindow);
+    openModal();
     outputText(selectedLang);
+});
+
+document.addEventListener('keydown', ()=>{
+    if(modalStart.classList.contains('d-flex')) {
+        if (event.code === 'Space' || event.code === 'Enter') {
+            closeModal();
+            newTextStart();
+        }
+    }
 });

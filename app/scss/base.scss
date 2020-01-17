@@ -1,12 +1,14 @@
 $background-color: #55c5ff;
-$white: #FFF;
-$light-blue: #8ad8ff;
-$bright-blue: #67defd;
-$dark: #212121;
-$gray: #B5BBC2;
-$green: #5BC538;
-$warn: #FFDAD2;
-$red: #FF2C37;
+$white:            #FFF;
+$light-blue:       #8ad8ff;
+$bright-blue:      #67defd;
+$dark:             #212121;
+$gray:             #B5BBC2;
+$green:            #5BC538;
+$warn:             #FFDAD2;
+$black:            #000000;
+$dark-gray:        #9b9b9b;
+$red:              #FF2C37;
 
 $font-md: 1em;
 $font-xl: 1.25em;
@@ -82,5 +84,17 @@ body{
 
 .text-done{
   color: $green;
+
+}
+
+.start-btn{
+  display: block;
+  width: 11em;
+  margin: 0 auto;
+
+  border-radius: 4px;
+  border: none;
+  padding: 0.33em 0em;
+  background: -webkit-linear-gradient(top,#ffed2d,#ffde0e);
 
 }
