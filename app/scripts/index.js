@@ -22,6 +22,8 @@ const continueBtn = document.querySelector('.continue-btn');
 
 let textOutput = null;
 let selectedLang = '';
+let errorCyrillic = false;
+let errorEnglish = false;
 
 function insertAdjacent(element, where, html) {
     return element.insertAdjacentHTML(where, html);
@@ -183,47 +185,72 @@ class Text {
                     mainTextarea.classList.remove('left-spaces-error');
                 }
 
-                /* Проверка на раскладку клавиатуры */
+            }
 
-                if(modalSelectOptions){
-                    let changeLang = '';
-                    let selectedOption;
+            /* Проверка на раскладку клавиатуры */
 
-                    for(let item of windowSelectOptions){
-                        if(item.selected){
-                            selectedOption = item.value;
-                        }
+            if(modalSelectOptions){
+                let changeLang = '';
+                let selectedOption;
+
+                for(let item of windowSelectOptions){
+                    if(item.selected){
+                        selectedOption = item.value;
                     }
+                }
 
-                    if(lastKey === 'Space' || lastKey === null || lastKey === 'Backspace') return false;
-
-                    if(selectedOption === 'ukr' || selectedOption === 'rus'){
-                        if(/[а-я-0-9]/i.test(lastWord) && ( selectedOption === 'ukr' || selectedOption === 'rus' )){
-                            modalContinue.classList.remove('d-flex');
-                            mainTextarea.focus();
-                        }
-                        else{
-                            mainTextarea.blur();
-                            changeLangSpan.innerHTML = 'Русский';
-                            modalContinue.classList.add('d-flex');
-                        }
+                if(lastKey === 'Space' || lastKey === null || lastKey === 'Backspace') return false;
+                if(selectedOption === 'ukr' || selectedOption === 'rus'){
+                    haveCyrillic();
+                    if(errorCyrillic){
+                        modalContinue.classList.remove('d-flex');
+                        mainTextarea.focus();
                     }
+                    else{
+                        mainTextarea.blur();
+                        changeLangSpan.innerHTML = 'Русский';
+                        modalContinue.classList.add('d-flex');
+                    }
+                }
 
-                    if(selectedOption === 'eng'){
-                        if(/[a-z-0-9]/i.test(lastWord)){
-                            closeModal(modalContinue);
-                            mainTextarea.focus();
-                        }
-                        else{
-                            mainTextarea.blur();
-                            changeLangSpan.innerHTML = 'English';
-                            modalContinue.classList.add('d-flex');
-                        }
-
+                if(selectedOption === 'eng'){
+                    haveEnglish();
+                    if(errorEnglish){
+                        closeModal(modalContinue);
+                        mainTextarea.focus();
+                    }
+                    else{
+                        mainTextarea.blur();
+                        changeLangSpan.innerHTML = 'English';
+                        modalContinue.classList.add('d-flex');
                     }
 
                 }
 
+            }
+
+            function haveCyrillic() {
+                let str = mainTextarea.value.split(' ').join('');
+                for(let char of str){
+                    if(/[а-я-0-9-,-.]/i.test(char)){
+                        errorCyrillic = true;
+                    }
+                    else{
+                        errorCyrillic = false;
+                    }
+                }
+            }
+
+            function haveEnglish() {
+                let str = mainTextarea.value.split(' ').join('');
+                for(let char of str){
+                    if(/[a-z-0-9-,-.]/i.test(char)){
+                        errorEnglish = true;
+                    }
+                    else{
+                        errorEnglish = false;
+                    }
+                }
             }
 
         });
@@ -358,6 +385,8 @@ languageSelectWindow.addEventListener('change', ()=>{
 continueBtn.addEventListener('click', ()=>{
     closeModal(modalContinue);
 });
+
+/* Открытие и закрытие модальных окон на space и enter */
 
 document.addEventListener('keydown', ()=>{
     if(modalStart.classList.contains('d-flex')) {
