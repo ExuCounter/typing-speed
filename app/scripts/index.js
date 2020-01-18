@@ -121,8 +121,6 @@ class Text {
                     mainTextarea.classList.add('textarea-error');
                     text.classList.add('text-error');
 
-                    lastWordWithoutErr = textDone.previousSibling;
-
                 }
                 if(lastKey === 'Backspace' && ( document.querySelector('.text-error') || prevSibling )){
                     for(let textErr of document.getElementsByClassName('text-error')){
