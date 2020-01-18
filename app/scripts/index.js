@@ -15,9 +15,13 @@ const accuracyNumber = document.getElementById('accuracy-number');
 const modalSelectOptions = document.querySelectorAll('.language-select-modal option');
 const windowSelectOptions = document.querySelectorAll('.language-select-window option');
 const modalStart = document.querySelector('.modal-start');
+const modalContinue = document.querySelector('.modal-continue');
 const modalLangError = document.querySelector('.modal-lang-error');
+const changeLangSpan = document.querySelector('.change-lang-span');
+const continueBtn = document.querySelector('.continue-btn');
 
 let textOutput = null;
+let selectedLang = '';
 
 function insertAdjacent(element, where, html) {
     return element.insertAdjacentHTML(where, html);
@@ -50,10 +54,6 @@ class Text {
     calcAccuracy(){
 
     }
-
-    /* sasha one love  || sasha sasha || space space*/
-    /* [sasha,one,love] */
-    /* sasha */
 
     mainTextAreaHandler(){
         let lastKey = null;
@@ -178,9 +178,50 @@ class Text {
                 if(document.querySelector('.text-error')){
                     console.log(true);
                 }
-                else{
+                else {
                     console.log(false);
                     mainTextarea.classList.remove('left-spaces-error');
+                }
+
+                /* Проверка на раскладку клавиатуры */
+
+                if(modalSelectOptions){
+                    let changeLang = '';
+                    let selectedOption;
+
+                    for(let item of windowSelectOptions){
+                        if(item.selected){
+                            selectedOption = item.value;
+                        }
+                    }
+
+                    if(lastKey === 'Space' || lastKey === null || lastKey === 'Backspace') return false;
+
+                    if(selectedOption === 'ukr' || selectedOption === 'rus'){
+                        if(/[а-я-0-9]/i.test(lastWord) && ( selectedOption === 'ukr' || selectedOption === 'rus' )){
+                            modalContinue.classList.remove('d-flex');
+                            mainTextarea.focus();
+                        }
+                        else{
+                            mainTextarea.blur();
+                            changeLangSpan.innerHTML = 'Русский';
+                            modalContinue.classList.add('d-flex');
+                        }
+                    }
+
+                    if(selectedOption === 'eng'){
+                        if(/[a-z-0-9]/i.test(lastWord)){
+                            closeModal(modalContinue);
+                            mainTextarea.focus();
+                        }
+                        else{
+                            mainTextarea.blur();
+                            changeLangSpan.innerHTML = 'English';
+                            modalContinue.classList.add('d-flex');
+                        }
+
+                    }
+
                 }
 
             }
@@ -216,7 +257,6 @@ class Text {
 
 function newTextStart() {
     mainTextarea.value = '';
-    mainTextarea.focus();
 
     if(textOutput){
         textOutput.clearTextInterval();
@@ -272,53 +312,66 @@ function dependenceSelect(select, comparable){
 
 }
 
-function openModal() {
-    modalStart.classList.add('d-flex');
+function openModal(modal) {
+    modal.classList.add('d-flex');
     mainTextarea.classList.remove('textarea-error');
 
 }
 
-function closeModal() {
-    modalStart.classList.remove('d-flex');
+function closeModal(modal) {
+    modal.classList.remove('d-flex');
+    mainTextarea.focus();
 
 }
 
 outputText(rusTextArray);
-
 /* BUTTONS */
 
 
 
 languageSelectModal.addEventListener('change', ()=>{
-    let selectedLang = eval((languageSelectModal.value).slice(0, 3).toLowerCase() + 'TextArray');
+    selectedLang = eval((languageSelectModal.value).slice(0, 3).toLowerCase() + 'TextArray');
     dependenceSelect(windowSelectOptions, languageSelectModal);
     outputText(selectedLang);
+    closeModal(modalContinue);
 });
 
 buttonStart.addEventListener('click', ()=>{
-    closeModal();
+    closeModal(modalStart);
     newTextStart();
 });
 
 tryAgainBtn.addEventListener('click', ()=>{
-    let selectedLang = eval((languageSelectWindow.value).slice(0, 3).toLowerCase() + 'TextArray');
+    selectedLang = eval((languageSelectWindow.value).slice(0, 3).toLowerCase() + 'TextArray');
     dependenceSelect(modalSelectOptions, languageSelectWindow);
-    openModal();
+    openModal(modalStart);
     outputText(selectedLang);
 });
 
 languageSelectWindow.addEventListener('change', ()=>{
-    let selectedLang = eval((languageSelectWindow.value).slice(0, 3).toLowerCase() + 'TextArray');
+    selectedLang = eval((languageSelectWindow.value).slice(0, 3).toLowerCase() + 'TextArray');
     dependenceSelect(modalSelectOptions, languageSelectWindow);
-    openModal();
+    openModal(modalStart);
     outputText(selectedLang);
+});
+
+continueBtn.addEventListener('click', ()=>{
+    closeModal(modalContinue);
 });
 
 document.addEventListener('keydown', ()=>{
     if(modalStart.classList.contains('d-flex')) {
         if (event.code === 'Space' || event.code === 'Enter') {
-            closeModal();
+            event.preventDefault();
+            closeModal(modalStart);
             newTextStart();
         }
     }
+    if(modalContinue.classList.contains('d-flex')) {
+        if (event.code === 'Space' || event.code === 'Enter') {
+            event.preventDefault();
+            closeModal(modalContinue);
+        }
+    }
+
 });

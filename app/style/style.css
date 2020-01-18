@@ -36,7 +36,7 @@ body {
 .text-done {
   color: #5BC538; }
 
-.start-btn {
+.main-btn {
   display: block;
   width: 11em;
   margin: 0 auto;
@@ -44,6 +44,9 @@ body {
   border: none;
   padding: 0.33em 0em;
   background: -webkit-linear-gradient(top, #ffed2d, #ffde0e); }
+
+.display-flex {
+  display: flex !important; }
 
 .main {
   max-width: 1110px;
@@ -97,7 +100,7 @@ body {
     line-height: 1.75em; }
 
 .modal {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(34, 167, 240, 0.4);
   position: fixed;
   left: 0;
   top: 0;
