@@ -16,12 +16,14 @@ const modalSelectOptions = document.querySelectorAll('.language-select-modal opt
 const windowSelectOptions = document.querySelectorAll('.language-select-window option');
 const modalStart = document.querySelector('.modal-start');
 const modalContinue = document.querySelector('.modal-continue');
-const modalLangError = document.querySelector('.modal-lang-error');
 const changeLangSpan = document.querySelector('.change-lang-span');
 const continueBtn = document.querySelector('.continue-btn');
 
 let textOutput = null;
 let selectedLang = '';
+let textNumber = 0;
+let currentTextCounter = 0;
+let currentTextArr = [];
 
 function insertAdjacent(element, where, html) {
     return element.insertAdjacentHTML(where, html);
@@ -45,6 +47,7 @@ class Text {
                 event.code === 'ArrowDown' || event.code === 'ArrowUp' || event.code === 'ArrowLeft' || event.code === 'ArrowRight' ||
                 event.code === 'Delete' || event.code === 'End' || event.code === "Help" || event.code === 'Home' ||
                 event.code === 'Insert')  return false;
+
             if(document.querySelector('.text-error')) return false;
             speedCounter++;
         });
@@ -55,142 +58,74 @@ class Text {
 
     }
 
+    addError(mainTextarea, activeText){
+        mainTextarea.classList.add('textarea-error');
+        activeText.classList.add('text-error');
+    }
+
+    removeError(mainTextarea, activeText){
+        mainTextarea.classList.remove('textarea-error');
+        activeText.classList.remove('text-error');
+    }
+
     mainTextAreaHandler(){
         let lastKey = null;
-        let lastWord = null;
+        let wholeArr = []
 
         mainTextarea.addEventListener('keydown', ()=>{ /* Отслеживаем последнюю нажатую кнопку */
             lastKey = event.code;
+            if(event.key.length === 1){
+                wholeArr.push(event.key);
+            }
+            console.log(wholeArr);
+
         });
 
         mainTextarea.addEventListener('input', ()=>{ /* Мониторинг текстового поля для ввода */
+            let activeTexts = document.getElementsByClassName('text-active'); /* Активный текст */
 
-            let activeText = document.getElementsByClassName('text-active'); /* Активный текст */
-            for(let text of activeText){
-                let mainTextareaArray = mainTextarea.value.split(' ');
-                lastWord = mainTextareaArray[mainTextareaArray.length-1];
+            let mainTextareaArray = mainTextarea.value.split(' ');
+            let firstWord = mainTextareaArray[0];
 
-                let prevSibling = text.previousSibling;
-                let nextSibling = text.nextSibling;
+            for(let activeText of activeTexts) {
+                if ((firstWord === currentTextArr[currentTextCounter] && lastKey === 'Space' && mainTextareaArray.length === 2 )) {
+                    let sibling = activeText.nextSibling;
+                    let nextSibling = sibling.nextSibling;
 
-                let nodes = document.querySelectorAll('.text-done');
-                let textDone = nodes[nodes.length-1];
+                    activeText.classList.add('text-done');
+                    activeText.classList.remove('text-active');
 
-                let lastWordWithoutErr = null;
+                    mainTextarea.classList.remove('textarea-error');
+                    nextSibling.classList.add('text-active');
 
+                    activeText.classList.remove('text-error');
 
-                mainTextarea.classList.remove('textarea-error');
-                text.classList.remove('text-error');
-
-                /* Проверка на совпадение последних слов */
-
-                if(lastWord === text.innerHTML){
-                    let sibling = text.nextSibling;
-                    text.classList.add('text-done');
-                    text.classList.remove('text-active');
-                    sibling.classList.add('text-active');
-
-                    text.classList.remove('text-error');
-
+                    mainTextarea.value = '';
+                    currentTextCounter += 2;
                 }
 
-                /* При нажатии на кнопку SPACE */
-                if(lastKey === 'Space' && text.innerHTML === ' '){
-                    if(text.innerHTML.endsWith(lastWord) && !(document.querySelector('text-error'))){
-                        /* Если не существует ошибки и следующий символ пробел, переключаем активный текст  */
-                        let sibling = text.nextSibling;
-                        text.classList.add('text-done');
-                        text.classList.remove('text-error');
-                        text.classList.remove('text-active');
-                        sibling.classList.add('text-active');
-
-                        text.classList.remove('text-error');
-                    }
-                    else{
-                        lastWordWithoutErr = textDone.previousSibling;
-                        text.classList.add('text-error');
-                        mainTextarea.classList.add('textarea-error');
-                        mainTextarea.classList.add('left-spaces-error');
-                    }
-
-                }
-                else if(!(text.innerHTML.startsWith(lastWord))){
-                    /* Если слово не совпадает кидаем ошибку */
-                    mainTextarea.classList.add('textarea-error');
-                    text.classList.add('text-error');
-
-                }
-                if(lastKey === 'Backspace' && ( document.querySelector('.text-error') || prevSibling )){
-                    for(let textErr of document.getElementsByClassName('text-error')){
-                        if(textErr.previousSibling){
-                            let textErrPreviousSibling = textErr.previousSibling;
-                            if(textErrPreviousSibling.previousSibling){
-                                let lastDoneElement = textErrPreviousSibling.previousSibling;
-                                if(lastDoneElement){
-                                    if(lastWord === lastDoneElement.innerHTML){
-                                        prevSibling.classList.remove('text-done');
-                                        text.classList.remove('text-active');
-                                        prevSibling.classList.add('text-active');
-
-                                        text.classList.remove('text-error');
-                                        mainTextarea.classList.remove('textarea-error');
-                                    }
-                                }
-                            }
-                        }
-                        else{
-                            if(lastWord === textErr.innerHTML){
-                                text.classList.remove('text-active');
-
-                                text.classList.remove('text-error');
-                                mainTextarea.classList.remove('textarea-error');
-                            }
-                        }
-                    }
-                    if(prevSibling){
-                        if(prevSibling.innerHTML.indexOf(" ")){
-                            prevSibling.classList.remove('text-done');
-                            text.classList.remove('text-active');
-                            prevSibling.classList.add('text-active');
-
-                            text.classList.remove('text-error');
-                            mainTextarea.classList.remove('textarea-error');
-                        }
-                    }
-
+                if((!(firstWord === currentTextArr[currentTextCounter-2]) && lastKey === 'Space' && mainTextareaArray.length > 1) ||
+                    (!(firstWord === currentTextArr[currentTextCounter]) && lastKey === 'Backspace' && mainTextareaArray.length > 1) ||
+                    (mainTextareaArray.length > 1) ||
+                    !(activeText.innerHTML.startsWith(firstWord))){
+                    this.addError(mainTextarea, activeText);
+                } else{
+                    this.removeError(mainTextarea, activeText);
                 }
 
-                console.log(mainTextareaArray.length);
-                console.log( Math.ceil(nodes.length/2 + 1));
-
-                if(lastKey === 'Backspace' && mainTextarea.classList.contains('left-spaces-error')){
-                    if(!(((mainTextareaArray.length) === Math.ceil(nodes.length/2 + 1)) && text.indexOf(lastWord))){
-                        mainTextarea.classList.add('textarea-error');
-                        text.classList.add('text-error');
-                        mainTextarea.classList.add('left-spaces-error');
-
-                        console.log('backspace');
-                    }
-
-                }
-                if(document.querySelector('.text-error')){
-                    console.log(true);
-                }
-                else {
-                    console.log(false);
-                    mainTextarea.classList.remove('left-spaces-error');
+                if(lastKey === 'Space' && mainTextarea.value === ''){
+                    this.removeError(mainTextarea, activeText);
                 }
 
             }
 
             /* Проверка на раскладку клавиатуры */
-            
+
             (function testOnRightLayout() {
                 let errorCyrillic = false;
                 let errorEnglish = false;
 
                 if(modalSelectOptions){
-                    let changeLang = '';
                     let selectedOption;
 
                     for(let item of windowSelectOptions){
@@ -232,7 +167,7 @@ class Text {
                 function haveCyrillic() {
                     let str = mainTextarea.value.split(' ').join('');
                     for(let char of str){
-                        if(/[а-я-0-9-,-.]/i.test(char)){
+                        if(/[а-я-0-9-,-.-!-=]/i.test(char)){
                             errorCyrillic = true;
                         }
                         else{
@@ -244,7 +179,7 @@ class Text {
                 function haveEnglish() {
                     let str = mainTextarea.value.split(' ').join('');
                     for(let char of str){
-                        if(/[a-z-0-9-,-.]/i.test(char)){
+                        if(/[a-z-0-9-,-.-!-=]/i.test(char)){
                             errorEnglish = true;
                         }
                         else{
@@ -308,7 +243,7 @@ function newText() {
 /* Функция вывода текста */
 
 function outputText(textArray){
-    let textNumber = Math.floor(Math.random() * (textArray.length));
+    textNumber = Math.floor(Math.random() * (textArray.length));
     mainText.innerHTML = '';
     mainTextarea.value = '';
 
@@ -318,24 +253,19 @@ function outputText(textArray){
 
     let text = textArray[textNumber].split(' ');
 
-    for(let i = 0; i < text.length; i++){
-        if(i===0){
-            insertAdjacent(mainText, 'beforeend', `<span class='text-active'>${text[0]}</span>`);
-            insertAdjacent(mainText, 'beforeend', `<span class='text-default'> </span>`);
-        }
-        else{
-            insertAdjacent(mainText, 'beforeend', `<span class='text-default'>${text[i]}</span>`);
-            insertAdjacent(mainText, 'beforeend', `<span class='text-default'> </span>`);
-
-        }
+    currentTextArr = [];
+    for(let word of text){
+        currentTextArr.push(word);
+        currentTextArr.push(' ');
     }
 
-}
+    for(let i = 0; i < currentTextArr.length; i++){
+        if(i===0){
+            insertAdjacent(mainText, 'beforeend', `<span class='text-active'>${currentTextArr[0]}</span>`);
+        }
+        else{
+            insertAdjacent(mainText, 'beforeend', `<span class='text-default'>${currentTextArr[i]}</span>`);
 
-function dependenceSelect(select, comparable){
-    for(let option of select){
-        if(option.value === comparable.value){
-            option.selected = true;
         }
     }
 
@@ -354,13 +284,12 @@ function closeModal(modal) {
 }
 
 outputText(rusTextArray);
+newTextStart();
+
 /* BUTTONS */
-
-
 
 languageSelectModal.addEventListener('change', ()=>{
     selectedLang = eval((languageSelectModal.value).slice(0, 3).toLowerCase() + 'TextArray');
-    dependenceSelect(windowSelectOptions, languageSelectModal);
     outputText(selectedLang);
     closeModal(modalContinue);
 });
@@ -372,14 +301,6 @@ buttonStart.addEventListener('click', ()=>{
 
 tryAgainBtn.addEventListener('click', ()=>{
     selectedLang = eval((languageSelectWindow.value).slice(0, 3).toLowerCase() + 'TextArray');
-    dependenceSelect(modalSelectOptions, languageSelectWindow);
-    openModal(modalStart);
-    outputText(selectedLang);
-});
-
-languageSelectWindow.addEventListener('change', ()=>{
-    selectedLang = eval((languageSelectWindow.value).slice(0, 3).toLowerCase() + 'TextArray');
-    dependenceSelect(modalSelectOptions, languageSelectWindow);
     openModal(modalStart);
     outputText(selectedLang);
 });

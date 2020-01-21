@@ -67,7 +67,7 @@ body {
       border-bottom-right-radius: 0.5em; }
       .main-type-field textarea {
         width: 100%;
-        padding: 0.75em 1em 5.5em 1em;
+        padding: 0.75em 1em 1.5em 1em;
         font-size: 1em; }
         .main-type-field textarea::-webkit-scrollbar {
           visibility: hidden; }
