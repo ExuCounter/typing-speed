@@ -5,9 +5,10 @@ let ukrTextArray = [
 ];
 
 let rusTextArray = [
-    'Не следует, однако забывать, что постоянное информационно-пропагандистское обеспечение нашей деятельности требуют определения и уточнения соответствующий условий активизации.',
-    'Таким образом рамки и место обучения кадров играет важную роль в формировании новых предложений. Таким образом начало повседневной работы по формированию позиции.',
+    'Не следует, однако забывать.',
+    'Таким образом рамки',
 ];
+
 
 let engTextArray = [
     'Besides, other people refuse to take part in Christmas, because they consider that this holiday became too commercial. It’s true that in December stores are full of Christmas goods. ',

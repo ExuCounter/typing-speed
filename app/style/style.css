@@ -48,6 +48,12 @@ body {
 .display-flex {
   display: flex !important; }
 
+.finish-img {
+  width: 122px;
+  height: 122px;
+  display: block;
+  margin: 0 auto; }
+
 .main {
   max-width: 1110px;
   margin: 0 auto; }

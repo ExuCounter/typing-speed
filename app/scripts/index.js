@@ -1,8 +1,4 @@
-import {
-    ukrTextArray,
-    rusTextArray,
-    engTextArray
-} from "./dataArrays.js";
+import {rusTextArray} from "./dataArrays.js";
 
 const mainText = document.getElementById('main-text');
 const mainTextarea = document.getElementById('main-textarea');
@@ -16,13 +12,16 @@ const modalSelectOptions = document.querySelectorAll('.language-select-modal opt
 const windowSelectOptions = document.querySelectorAll('.language-select-window option');
 const modalStart = document.querySelector('.modal-start');
 const modalContinue = document.querySelector('.modal-continue');
+const modalEnd = document.querySelector('.modal-end');
 const changeLangSpan = document.querySelector('.change-lang-span');
 const continueBtn = document.querySelector('.continue-btn');
+const modalEndRestartBtn = document.querySelector('.end-btn');
+const modalEndSpeed = document.querySelector('.modal-end-speed');
+const modalEndAccuracy = document.querySelector('.modal-end-accuracy');
 
 let textOutput = null;
 let selectedLang = '';
 let textNumber = 0;
-let currentTextCounter = 0;
 let currentTextArr = [];
 
 function insertAdjacent(element, where, html) {
@@ -36,25 +35,32 @@ class Text {
     timeSpeedIncrement;
     numberSpeedIncrement;
     numberAccuracyIncrement;
+    errorCounter = 0;
 
-    calcStat(speedCounter, time){
+    calcStat(speedCounter, accuracyCounter, time){
         this.timeSpeedIncrement = setInterval(()=>(time++), 1000);
-        this.numberSpeedIncrement = setInterval(()=>{speedNumber.innerHTML = `${Math.ceil((speedCounter*60)/time)}`}, 1000);
-        this.numberAccuracyIncrement = setInterval(()=>{accuracyNumber.innerHTML = `${Math.ceil((1)/time)}`}, 1000);
+        this.numberSpeedIncrement = setInterval(()=>{
+            speedNumber.innerHTML = `${Math.ceil((speedCounter * 60) / time)}`;
+            }, 1000);
+        this.numberAccuracyIncrement = setInterval(()=>{
+            accuracyNumber.innerHTML = `${accuracyCounter}`
+        }, 1000);
         mainTextarea.addEventListener('keydown', ()=>{
+            if(document.querySelector('.text-error') && this.errorCounter === 0){
+                this.errorCounter++;
+                accuracyCounter++;
+                return false;
+            }
+            if(!(document.querySelector('.text-error'))){
+                this.errorCounter = 0;
+            }
             if(event.code === "Backspace" || event.key === 'Shift' || event.code === "Enter" || event.key === 'Alt' ||
                 event.key === 'Meta' || event.key === 'Control' || event.key === 'Tab' || event.key === 'CapsLock' ||
                 event.code === 'ArrowDown' || event.code === 'ArrowUp' || event.code === 'ArrowLeft' || event.code === 'ArrowRight' ||
                 event.code === 'Delete' || event.code === 'End' || event.code === "Help" || event.code === 'Home' ||
                 event.code === 'Insert')  return false;
-
-            if(document.querySelector('.text-error')) return false;
             speedCounter++;
         });
-
-    }
-
-    calcAccuracy(){
 
     }
 
@@ -70,38 +76,42 @@ class Text {
 
     mainTextAreaHandler(){
         let lastKey = null;
-        let wholeArr = []
+        let wholeArr = [];
+        let currentTextCounter = 0;
 
         mainTextarea.addEventListener('keydown', ()=>{ /* Отслеживаем последнюю нажатую кнопку */
             lastKey = event.code;
             if(event.key.length === 1){
                 wholeArr.push(event.key);
             }
-            console.log(wholeArr);
 
         });
 
         mainTextarea.addEventListener('input', ()=>{ /* Мониторинг текстового поля для ввода */
             let activeTexts = document.getElementsByClassName('text-active'); /* Активный текст */
-
+            let lastWord = currentTextArr[currentTextArr.length-2];
             let mainTextareaArray = mainTextarea.value.split(' ');
             let firstWord = mainTextareaArray[0];
 
             for(let activeText of activeTexts) {
                 if ((firstWord === currentTextArr[currentTextCounter] && lastKey === 'Space' && mainTextareaArray.length === 2 )) {
-                    let sibling = activeText.nextSibling;
-                    let nextSibling = sibling.nextSibling;
+                    if(activeText.nextSibling) {
+                        let sibling = activeText.nextSibling;
+                        if (sibling.nextSibling) {
+                            let nextSibling = sibling.nextSibling;
 
-                    activeText.classList.add('text-done');
-                    activeText.classList.remove('text-active');
+                            activeText.classList.add('text-done');
+                            activeText.classList.remove('text-active');
 
-                    mainTextarea.classList.remove('textarea-error');
-                    nextSibling.classList.add('text-active');
+                            mainTextarea.classList.remove('textarea-error');
+                            nextSibling.classList.add('text-active');
 
-                    activeText.classList.remove('text-error');
+                            activeText.classList.remove('text-error');
 
-                    mainTextarea.value = '';
-                    currentTextCounter += 2;
+                            mainTextarea.value = '';
+                            currentTextCounter += 2;
+                        }
+                    }
                 }
 
                 if((!(firstWord === currentTextArr[currentTextCounter-2]) && lastKey === 'Space' && mainTextareaArray.length > 1) ||
@@ -115,6 +125,15 @@ class Text {
 
                 if(lastKey === 'Space' && mainTextarea.value === ''){
                     this.removeError(mainTextarea, activeText);
+                }
+
+                if(activeText.innerHTML === lastWord && firstWord === currentTextArr[currentTextCounter]){
+                    modalEndSpeed.innerHTML = speedNumber.innerHTML;
+                    modalEndAccuracy.innerHTML = accuracyNumber.innerHTML;
+                    this.clearTextInterval();
+                    openModal(modalEnd);
+                    modalEnd.focus();
+
                 }
 
             }
@@ -196,8 +215,8 @@ class Text {
 
     /* Функция создания новых стат */
 
-    createStat(speedCounter, time) {
-        this.calcStat(speedCounter,time);
+    createStat(speedCounter, accuracyCounter, time) {
+        this.calcStat(speedCounter,accuracyCounter,time);
         this.mainTextAreaHandler();
 
     }
@@ -236,7 +255,7 @@ function newTextStart() {
 
 function newText() {
     textOutput = new Text();
-    textOutput.createStat(0,0);
+    textOutput.createStat(0,0, 0);
 
 }
 
@@ -259,7 +278,7 @@ function outputText(textArray){
         currentTextArr.push(' ');
     }
 
-    for(let i = 0; i < currentTextArr.length; i++){
+    for(let i = 0; i < currentTextArr.length-1; i++){
         if(i===0){
             insertAdjacent(mainText, 'beforeend', `<span class='text-active'>${currentTextArr[0]}</span>`);
         }
@@ -300,13 +319,20 @@ buttonStart.addEventListener('click', ()=>{
 });
 
 tryAgainBtn.addEventListener('click', ()=>{
-    selectedLang = eval((languageSelectWindow.value).slice(0, 3).toLowerCase() + 'TextArray');
+    selectedLang = eval((languageSelectModal.value).slice(0, 3).toLowerCase() + 'TextArray');
     openModal(modalStart);
     outputText(selectedLang);
 });
 
 continueBtn.addEventListener('click', ()=>{
     closeModal(modalContinue);
+});
+
+modalEndRestartBtn.addEventListener('click', ()=>{
+    selectedLang = eval((languageSelectModal.value).slice(0, 3).toLowerCase() + 'TextArray');
+    openModal(modalStart);
+    closeModal(modalEnd);
+    outputText(selectedLang);
 });
 
 /* Открытие и закрытие модальных окон на space и enter */
