@@ -1,4 +1,6 @@
 import {rusTextArray} from "./dataArrays.js";
+import {engTextArray} from "./dataArrays.js";
+import {ukrTextArray} from "./dataArrays.js";
 
 const mainText = document.getElementById('main-text');
 const mainTextarea = document.getElementById('main-textarea');
@@ -130,9 +132,8 @@ class Text {
                 if(activeText.innerHTML === lastWord && firstWord === currentTextArr[currentTextCounter]){
                     modalEndSpeed.innerHTML = speedNumber.innerHTML;
                     modalEndAccuracy.innerHTML = accuracyNumber.innerHTML;
-                    this.clearTextInterval();
                     openModal(modalEnd);
-                    modalEnd.focus();
+                    mainTextarea.blur();
 
                 }
 
@@ -147,7 +148,7 @@ class Text {
                 if(modalSelectOptions){
                     let selectedOption;
 
-                    for(let item of windowSelectOptions){
+                    for(let item of modalSelectOptions){
                         if(item.selected){
                             selectedOption = item.value;
                         }
@@ -293,6 +294,7 @@ function outputText(textArray){
 function openModal(modal) {
     modal.classList.add('d-flex');
     mainTextarea.classList.remove('textarea-error');
+    mainTextarea.blur();
 
 }
 
@@ -317,6 +319,7 @@ buttonStart.addEventListener('click', ()=>{
     closeModal(modalStart);
     newTextStart();
 });
+
 
 tryAgainBtn.addEventListener('click', ()=>{
     selectedLang = eval((languageSelectModal.value).slice(0, 3).toLowerCase() + 'TextArray');
@@ -349,6 +352,15 @@ document.addEventListener('keydown', ()=>{
         if (event.code === 'Space' || event.code === 'Enter') {
             event.preventDefault();
             closeModal(modalContinue);
+        }
+    }
+    if(modalEnd.classList.contains('d-flex')) {
+        if (event.code === 'Space' || event.code === 'Enter') {
+            selectedLang = eval((languageSelectModal.value).slice(0, 3).toLowerCase() + 'TextArray');
+            event.preventDefault();
+            closeModal(modalEnd);
+            openModal(modalStart);
+            outputText(selectedLang);
         }
     }
 
