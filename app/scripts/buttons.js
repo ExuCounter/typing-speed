@@ -4,27 +4,59 @@ import {
     engTextArray
 } from "./dataArrays.js";
 
-// import {
-//     newTextStart,
-//     outputText
-// } from "./index";
-//
-// const languageSelect = document.getElementById('language-select');
-// const tryAgainBtn = document.getElementById('try-again');
-// const buttonStart = document.querySelector('.button');
+import {
+    languageSelectModal,
+    newTextStart,
+    modalStart,
+    modalEnd,
+    modalContinue
+} from "./index.js";
 
-// tryAgainBtn.addEventListener('click', ()=>{
-//     let selectedLang = eval((languageSelect.value).slice(0, 3).toLowerCase() + 'TextArray');
-//     newTextStart();
-//     outputText(selectedLang);
-// });
-//
-// languageSelect.addEventListener('change', ()=>{
-//     let selectedLang = eval((languageSelect.value).slice(0, 3).toLowerCase() + 'TextArray');
-//     newTextStart();
-//     outputText(selectedLang);
-// });
-//
-// buttonStart.addEventListener('click', ()=>{
-//     newTextStart();
-// });
+import {
+    outputText
+} from './output-text.js';
+
+import {
+    closeModal,
+    openModal
+} from './modal.js'
+
+const tryAgainBtn = document.getElementById('try-again');
+const buttonStart = document.querySelector('.start-btn');
+const continueBtn = document.querySelector('.continue-btn');
+const modalEndRestartBtn = document.querySelector('.end-btn');
+let selectedLang = null;
+
+languageSelectModal.addEventListener('change', ()=>{
+    selectedLang = eval((languageSelectModal.value).slice(0, 3).toLowerCase() + 'TextArray');
+    outputText(selectedLang);
+    closeModal(modalContinue);
+});
+
+buttonStart.addEventListener('click', ()=>{
+    closeModal(modalStart);
+    newTextStart();
+});
+
+
+tryAgainBtn.addEventListener('click', ()=>{
+    selectedLang = eval((languageSelectModal.value).slice(0, 3).toLowerCase() + 'TextArray');
+    openModal(modalStart);
+    outputText(selectedLang);
+});
+
+continueBtn.addEventListener('click', ()=>{
+    closeModal(modalContinue);
+});
+
+modalEndRestartBtn.addEventListener('click', ()=>{
+    selectedLang = eval((languageSelectModal.value).slice(0, 3).toLowerCase() + 'TextArray');
+    openModal(modalStart);
+    closeModal(modalEnd);
+    outputText(selectedLang);
+});
+
+export {
+    selectedLang
+}
+

@@ -1,30 +1,35 @@
-import {rusTextArray} from "./dataArrays.js";
-import {engTextArray} from "./dataArrays.js";
-import {ukrTextArray} from "./dataArrays.js";
+import {rusTextArray,
+        engTextArray,
+        ukrTextArray
+}  from "./dataArrays.js";
+
+import {
+    outputText,
+    currentTextArr
+} from "./output-text.js";
+
+import './buttons.js';
+import './modal-tabs.js';
+import {
+    openModal,
+    closeModal
+} from'./modal.js';
 
 const mainText = document.getElementById('main-text');
 const mainTextarea = document.getElementById('main-textarea');
 const speedNumber = document.getElementById('speed-number');
-const languageSelectWindow = document.querySelector('.language-select-window');
 const languageSelectModal = document.querySelector('.language-select-modal');
-const tryAgainBtn = document.getElementById('try-again');
-const buttonStart = document.querySelector('.start-btn');
 const accuracyNumber = document.getElementById('accuracy-number');
 const modalSelectOptions = document.querySelectorAll('.language-select-modal option');
-const windowSelectOptions = document.querySelectorAll('.language-select-window option');
 const modalStart = document.querySelector('.modal-start');
 const modalContinue = document.querySelector('.modal-continue');
 const modalEnd = document.querySelector('.modal-end');
 const changeLangSpan = document.querySelector('.change-lang-span');
-const continueBtn = document.querySelector('.continue-btn');
-const modalEndRestartBtn = document.querySelector('.end-btn');
 const modalEndSpeed = document.querySelector('.modal-end-speed');
 const modalEndAccuracy = document.querySelector('.modal-end-accuracy');
 
 let textOutput = null;
-let selectedLang = '';
 let textNumber = 0;
-let currentTextArr = [];
 
 function insertAdjacent(element, where, html) {
     return element.insertAdjacentHTML(where, html);
@@ -55,6 +60,9 @@ class Text {
             }
             if(!(document.querySelector('.text-error'))){
                 this.errorCounter = 0;
+            }
+            if(document.querySelector('.text-error')){
+                return false;
             }
             if(event.code === "Backspace" || event.key === 'Shift' || event.code === "Enter" || event.key === 'Alt' ||
                 event.key === 'Meta' || event.key === 'Control' || event.key === 'Tab' || event.key === 'CapsLock' ||
@@ -260,108 +268,19 @@ function newText() {
 
 }
 
-/* Функция вывода текста */
-
-function outputText(textArray){
-    textNumber = Math.floor(Math.random() * (textArray.length));
-    mainText.innerHTML = '';
-    mainTextarea.value = '';
-
-    if(textOutput){
-        textOutput.clearTextInterval();
-    }
-
-    let text = textArray[textNumber].split(' ');
-
-    currentTextArr = [];
-    for(let word of text){
-        currentTextArr.push(word);
-        currentTextArr.push(' ');
-    }
-
-    for(let i = 0; i < currentTextArr.length-1; i++){
-        if(i===0){
-            insertAdjacent(mainText, 'beforeend', `<span class='text-active'>${currentTextArr[0]}</span>`);
-        }
-        else{
-            insertAdjacent(mainText, 'beforeend', `<span class='text-default'>${currentTextArr[i]}</span>`);
-
-        }
-    }
-
-}
-
-function openModal(modal) {
-    modal.classList.add('d-flex');
-    mainTextarea.classList.remove('textarea-error');
-    mainTextarea.blur();
-
-}
-
-function closeModal(modal) {
-    modal.classList.remove('d-flex');
-    mainTextarea.focus();
-
-}
-
 outputText(rusTextArray);
-newTextStart();
 
-/* BUTTONS */
+export {
+    outputText,
+    languageSelectModal,
+    newTextStart,
+    modalStart,
+    modalEnd,
+    mainTextarea,
+    modalContinue,
+    textOutput,
+    textNumber,
+    insertAdjacent,
+    mainText
 
-languageSelectModal.addEventListener('change', ()=>{
-    selectedLang = eval((languageSelectModal.value).slice(0, 3).toLowerCase() + 'TextArray');
-    outputText(selectedLang);
-    closeModal(modalContinue);
-});
-
-buttonStart.addEventListener('click', ()=>{
-    closeModal(modalStart);
-    newTextStart();
-});
-
-
-tryAgainBtn.addEventListener('click', ()=>{
-    selectedLang = eval((languageSelectModal.value).slice(0, 3).toLowerCase() + 'TextArray');
-    openModal(modalStart);
-    outputText(selectedLang);
-});
-
-continueBtn.addEventListener('click', ()=>{
-    closeModal(modalContinue);
-});
-
-modalEndRestartBtn.addEventListener('click', ()=>{
-    selectedLang = eval((languageSelectModal.value).slice(0, 3).toLowerCase() + 'TextArray');
-    openModal(modalStart);
-    closeModal(modalEnd);
-    outputText(selectedLang);
-});
-
-/* Открытие и закрытие модальных окон на space и enter */
-
-document.addEventListener('keydown', ()=>{
-    if(modalStart.classList.contains('d-flex')) {
-        if (event.code === 'Space' || event.code === 'Enter') {
-            event.preventDefault();
-            closeModal(modalStart);
-            newTextStart();
-        }
-    }
-    if(modalContinue.classList.contains('d-flex')) {
-        if (event.code === 'Space' || event.code === 'Enter') {
-            event.preventDefault();
-            closeModal(modalContinue);
-        }
-    }
-    if(modalEnd.classList.contains('d-flex')) {
-        if (event.code === 'Space' || event.code === 'Enter') {
-            selectedLang = eval((languageSelectModal.value).slice(0, 3).toLowerCase() + 'TextArray');
-            event.preventDefault();
-            closeModal(modalEnd);
-            openModal(modalStart);
-            outputText(selectedLang);
-        }
-    }
-
-});
+}
