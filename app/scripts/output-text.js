@@ -1,10 +1,14 @@
 import{
-    textOutput,
-    textNumber,
     insertAdjacent,
     mainTextarea,
     mainText
 } from "./index.js";
+
+import {
+    textOutput
+} from "./start-functions.js";
+
+let textNumber = 0;
 
 /* Функция вывода текста */
 
@@ -13,6 +17,8 @@ let currentTextArr = [];
 function outputText(textArray){
     mainText.innerHTML = '';
     mainTextarea.value = '';
+
+    textNumber = Math.floor(Math.random() * (textArray.length));
 
     if(textOutput){
         textOutput.clearTextInterval();
@@ -40,5 +46,6 @@ function outputText(textArray){
 
 export{
     outputText,
+    textOutput,
     currentTextArr
 }

@@ -8,6 +8,10 @@ import {
     currentTextArr
 } from "./output-text.js";
 
+import {
+    newTextStart
+} from './start-functions.js';
+
 import './buttons.js';
 import './modal-tabs.js';
 import {
@@ -27,9 +31,6 @@ const modalEnd = document.querySelector('.modal-end');
 const changeLangSpan = document.querySelector('.change-lang-span');
 const modalEndSpeed = document.querySelector('.modal-end-speed');
 const modalEndAccuracy = document.querySelector('.modal-end-accuracy');
-
-let textOutput = null;
-let textNumber = 0;
 
 function insertAdjacent(element, where, html) {
     return element.insertAdjacentHTML(where, html);
@@ -243,31 +244,6 @@ class Text {
 
 }
 
-/* HANDLE TEXT */
-
-/* Функция запуска нового текста */
-
-function newTextStart() {
-    mainTextarea.value = '';
-
-    if(textOutput){
-        textOutput.clearTextInterval();
-        newText();
-    }
-    else{
-        newText();
-
-    }
-}
-
-/* Функция создания нового экземпляра */
-
-function newText() {
-    textOutput = new Text();
-    textOutput.createStat(0,0, 0);
-
-}
-
 outputText(rusTextArray);
 
 export {
@@ -278,9 +254,8 @@ export {
     modalEnd,
     mainTextarea,
     modalContinue,
-    textOutput,
-    textNumber,
     insertAdjacent,
-    mainText
+    mainText,
+    Text
 
 }

@@ -6,7 +6,6 @@
       <change beforePath="$PROJECT_DIR$/app/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/scripts/buttons.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/scripts/buttons.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/scripts/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/scripts/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/scripts/modal.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/scripts/modal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/scripts/output-text.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/scripts/output-text.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -96,7 +95,7 @@
       <workItem from="1579271914683" duration="15952000" />
       <workItem from="1579626220534" duration="8417000" />
       <workItem from="1579640661794" duration="2256000" />
-      <workItem from="1579788040937" duration="3084000" />
+      <workItem from="1579788040937" duration="4610000" />
     </task>
     <servers />
   </component>

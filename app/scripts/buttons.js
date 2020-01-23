@@ -6,11 +6,14 @@ import {
 
 import {
     languageSelectModal,
-    newTextStart,
     modalStart,
     modalEnd,
     modalContinue
 } from "./index.js";
+
+import {
+    newTextStart
+} from './start-functions.js';
 
 import {
     outputText
